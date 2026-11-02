@@ -15,35 +15,6 @@
   overflow: hidden;
 }
 
-.music {
-  position: absolute;
-  z-index: 8;
-  top: 14px;
-  right: 14px;
-  background: #fffdf8;
-  border: 3px solid #1c1917;
-  border-radius: 999px;
-  box-shadow: 4px 4px 0 #1c1917;
-  padding: 6px 12px;
-  font-family: Outfit, Nunito, sans-serif;
-  font-size: 14px;
-  font-weight: 800;
-}
-
-.music.on {
-  background: #ffe34d;
-}
-
-.music:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 #1c1917;
-}
-
-.music:active {
-  transform: translate(3px, 3px);
-  box-shadow: 0 0 0 #1c1917;
-}
-
 .welcome,
 .home,
 .calc {
@@ -956,12 +927,6 @@ button:focus-visible {
   .float.diamond {
     left: 248px;
     bottom: 132px;
-  }
-
-  .music {
-    top: 18px;
-    right: auto;
-    left: calc(50% - 230px);
   }
 
   .tabs {

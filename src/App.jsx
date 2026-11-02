@@ -77,7 +77,7 @@ function SparkMark() {
   )
 }
 
-function Welcome({ onDone, onStartMusic }) {
+function Welcome({ onDone }) {
   const [leaving, setLeaving] = useState(false)
   const finished = useRef(false)
 
@@ -102,10 +102,7 @@ function Welcome({ onDone, onStartMusic }) {
   return (
     <div
       className={leaving ? 'welcome leaving' : 'welcome'}
-      onClick={() => {
-        onStartMusic()
-        finish()
-      }}
+      onClick={finish}
     >
       <p className="kicker">Geometric Sequence</p>
       <h1 className="welcome-word" aria-label="Welcome">
@@ -129,7 +126,6 @@ function Welcome({ onDone, onStartMusic }) {
         className="skip"
         onClick={(event) => {
           event.stopPropagation()
-          onStartMusic()
           finish()
         }}
       >
@@ -817,68 +813,14 @@ function Phone({ dark, label, expr, error, big, keys, field, showSum, onPress })
 
 export default function App() {
   const [screen, setScreen] = useState('intro')
-  const [musicOn, setMusicOn] = useState(false)
-  const audioRef = useRef(null)
-  const userPaused = useRef(false)
   const goHome = useCallback(() => setScreen('home'), [])
   const goCalculator = useCallback(() => setScreen('calculator'), [])
   const goSlope = useCallback(() => setScreen('slope'), [])
 
-  const startMusic = useCallback(() => {
-    const audio = audioRef.current
-    if (!audio || userPaused.current) return Promise.resolve()
-    audio.volume = 0.45
-    return audio.play().then(() => setMusicOn(true))
-  }, [])
-
-  useEffect(() => {
-    let removeGesture = () => {}
-
-    startMusic()?.catch(() => {
-      const once = () => {
-        removeGesture()
-        startMusic()?.catch(() => {})
-      }
-      window.addEventListener('pointerdown', once)
-      window.addEventListener('keydown', once)
-      removeGesture = () => {
-        window.removeEventListener('pointerdown', once)
-        window.removeEventListener('keydown', once)
-      }
-    })
-
-    return () => removeGesture()
-  }, [startMusic])
-
-  const toggleMusic = useCallback(() => {
-    const audio = audioRef.current
-    if (!audio) return
-    if (musicOn) {
-      userPaused.current = true
-      audio.pause()
-      setMusicOn(false)
-      return
-    }
-    userPaused.current = false
-    startMusic()?.catch(() => {})
-  }, [musicOn, startMusic])
-
   return (
     <div className="stage">
       <main className="board">
-        <button type="button" className={musicOn ? 'music on' : 'music'} onClick={toggleMusic}>
-          {musicOn ? 'Music on' : 'Music'}
-        </button>
-        <audio
-          ref={audioRef}
-          src={encodeURI(
-            '/Olivia Dean - So Easy (To Fall In Love) (Lyrics) - Rap Samurai.mp3',
-          )}
-          loop
-          autoPlay
-          preload="auto"
-        />
-        {screen === 'intro' && <Welcome onDone={goHome} onStartMusic={startMusic} />}
+        {screen === 'intro' && <Welcome onDone={goHome} />}
         {screen === 'home' && <Home onStart={goCalculator} onSlope={goSlope} />}
         {screen === 'calculator' && <CalculatorDraft onBack={goHome} />}
         {screen === 'slope' && <SlopeIntercept onBack={goHome} />}
